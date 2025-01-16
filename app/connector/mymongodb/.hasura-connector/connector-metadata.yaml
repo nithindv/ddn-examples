@@ -1,0 +1,32 @@
+packagingDefinition:
+  type: PrebuiltDockerImage
+  dockerImage: ghcr.io/hasura/ndc-mongodb:v1.5.0
+nativeToolchainDefinition:
+  commands:
+    start:
+      type: ShellScript
+      bash: |
+        #!/usr/bin/env bash
+        set -eu -o pipefail        
+        HASURA_CONFIGURATION_DIRECTORY="$HASURA_PLUGIN_CONNECTOR_CONTEXT_PATH" mongodb-connector serve
+      powershell: ""
+    update:
+      type: ShellScript
+      bash: |
+        #!/usr/bin/env bash
+        set -eu -o pipefail
+        "$HOME/.ddn/plugins/bin/hasura-ndc_mongodb" update
+      powershell: ""
+supportedEnvironmentVariables:
+  - name: MONGODB_DATABASE_URI
+    description: The URI for the MongoDB database
+commands:
+  update: hasura-ndc-mongodb update
+cliPlugin:
+  name: ndc-mongodb
+  version: v1.5.0
+dockerComposeWatch:
+  - path: ./
+    target: /etc/connector
+    action: sync+restart
+documentationPage: "https://hasura.info/mongodb-getting-started"
